@@ -1,0 +1,4 @@
+v:\mezzmo\	   	                        # Path to Mezzmo database
+logfile.txt					# Logfile
+10						# Backup copies to keep (0-10)
+Yes						# Automatic sync on Mezzmo update with changes (Yes or Y to enable)
