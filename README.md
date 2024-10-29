@@ -45,7 +45,7 @@ A utility to help you manage your Mezzmo folder and playlist data.
          
  The CSV export utility currently requires Python version 3 when using native Python format.<br/><br/>
 
-See the latest updates on the <a href="https://github.com/jbinkley60/MezzmoTrailerChecker/wiki">Mezzmo Folder Manager wiki</a>.
+See the latest updates on the <a href="https://github.com/jbinkley60/MezzmoFolderManager/wiki">Mezzmo Folder Manager wiki</a>.
 
 <br>
 
