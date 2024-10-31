@@ -329,7 +329,7 @@ def syncMezzmo():
         dbf.commit()
 
         mgenlog = 'MGOSubWatchFolder completed.  Records processed: ' + str(len(mftuples))
-        print('\t ' + mgenlog)
+        print('\t' + mgenlog)
         genLog(mgenlog)
 
 
@@ -435,8 +435,10 @@ def syncMezzmo():
         dbf.close()
 
         mgenlog = 'MGOPlaylist completed.  Records processed: ' + str(len(mptuples))
-        print('\t ' + mgenlog)
+        print('\t' + mgenlog)
         genLog(mgenlog)
+
+        time.sleep(4)
 
 
 def mezzmoUpdate(source = '', mezztab = '', criteria = ''):        # Update Mezzmo from Mezzmo Folder Manager 
@@ -595,10 +597,33 @@ def checkDatabase():
 
     except Exception as e:
         print (e)
-        mgenlog = "There was a problem verifying the folder database file: " + folderdb
-        print(mgenlog)
-        sys.exit()   
+        print("There was a problem verifying the Mezzmo Folder database file: " + folderdb)
+        sys.exit()
 
+
+def checkMezzDB():                                          # Test connectivity to Mezzmo DB 
+
+    try:
+        dbfile = tr_config['dbfile']
+        dbm =  openMezDB()
+        if dbm == None:
+            mgenlog = "There was a problem conencting to the Mezzmo database: " + dbfile
+            genLog(mgenlog)
+            print('\n' + mgenlog)
+            sys.exit()
+        else:
+            dbm.close()
+            mgenlog = "Successfully connected to Mezzmo database: " + dbfile
+            genLog(mgenlog)
+            print('\n\t\t' + mgenlog)    
+
+    except Exception as e:
+        print (e)              
+        mgenlog = "There was a problem conencting to the Mezzmo database: " + dbfile
+        genLog(mgenlog)
+        print('\n' + mgenlog)
+        sys.exit()
+  
 
 def openFolderDB():
 
@@ -609,7 +634,7 @@ def openFolderDB():
     except:
         from pysqlite2 import dbapi2 as sqlite
                        
-    db = sqlite.connect(folderdb)
+    db = sqlite.connect(folderdb, timeout=2)
 
     return db
 
@@ -625,9 +650,9 @@ def openMezDB():
     except:
         from pysqlite2 import dbapi2 as sqlite
                        
-    db = sqlite.connect(dbfile)
-    db.execute('PRAGMA journal_mode = WAL;')
-    db.execute('PRAGMA synchronous = NORMAL;')
+    db = sqlite.connect(dbfile, timeout=10)
+    #db.execute('PRAGMA journal_mode = WAL;')
+    #db.execute('PRAGMA synchronous = NORMAL;')
     db.execute('PRAGMA cache_size = -10000;')
 
     return db
@@ -892,7 +917,8 @@ def makeBackups():                                   # Make database backups
 
 
 getConfig()                                                  # Read config file                                  
-checkDatabase()                                              # Check trailer database 
+checkDatabase()                                              # Check trailer database
+checkMezzDB()                                                # Check connectivity to Mezzmo database 
 checkFolders()                                               # Check trailer and temp folder locations
 checkLogfile()                                               # Checks / trims the size of the logfile
 checkRecordLimits()
